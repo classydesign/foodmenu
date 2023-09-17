@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Reusable Component Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- (A) LOAD LIBRARY -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="1a-mylib.js"></script>
+  </head>
+  <body>
+    <!-- (B) AJAX LOAD CONTENT -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9">
+          <div id="demo1"></div>
+        </div>
+        <div class="col-lg-3">
+          <div id="demo"></div>
+        </div>
+      </div>
+    </div>
+    
+   
+
+    <script>//get edgedevice lists
+    mylib.load("https://jsonplaceholder.typicode.com/todos/", "demo1", "false");
+    mylib.load("https://jsonplaceholder.typicode.com/todos/", "demo", "true");
+    </script>
+  </body>
+</html>
+
+
+
+//get edgeDevice lists
+var    output = "";
+var mylib = {
+  // (A) AJAX : AJAX FETCH
+  //  url : target url
+  //  done : function to call when server responds
+
+
+
+  ajax : (url, done) => {
+    fetch(url, { method:"GET" })
+    
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(result) {
+
+     // alert(JSON.stringify(result))
+       output += "<ul class='list-group'>";
+
+       for (let i in result) {
+       // alert(result[i])
+        output +=
+          "<li data-id="+result[i]['id']+" class='list-group-item'>"+(result[i]['title'])+"</li>"
+      }
+      output += "</ul>";
+      /*  "<table><thead><tr><th>Name</th><th>Provider</th><th>URL</th></thead><tbody>";
+      for (let i in result) {
+        alert(result[i])
+        output +=
+          "<tr><td>" +
+          result[i]+
+          "</td><td>" +
+          result[i]+
+          "</td><td>" +
+          result[i] +
+          "</td></tr>";
+      }
+      output += "</tbody></table>";*/
+      //displayResources.innerHTML = output;
+     
+ 
+    })
+    .then(txt => done(output));
+
+  /*  .then((res) => {
+      var test ="";
+    for (const [country, capital] of Object.entries(res)){
+      //var capital = response[country];
+    test +=  country + capital;
+     // res = capital;
+
+     alert(test);
+    }
+   // .then(txt => done(txt));
+
+  })
+  .then(txt => done(txt));*/
+ // .then(txt => done(txt));
+
+
+//.then(txt => done('<li>'+txt.id+'</li>'));
+ /* .then(txt => done(function(txt){
+    txt = '<li>'+txt.id+'</li>';
+  }));*/
+
+  /*.then(function(result) {
+
+    alert(JSON.stringify(result))
+     output = 
+      "<table><thead><tr><th>Name</th><th>Provider</th><th>URL</th></thead><tbody>";
+    for (let i in result) {
+      alert(result[i])
+      output +=
+        "<tr><td>" +
+        result[i]+
+        "</td><td>" +
+        result[i]+
+        "</td><td>" +
+        result[i] +
+        "</td></tr>";
+    }
+    output += "</tbody></table>";
+    //displayResources.innerHTML = output;
+   
+  
+  })*/
+ // .then(output => done(output));
+  },
+
+  // (B) LOAD : USE AJAX TO LOAD CONTENTS
+  //  url : target url
+  //  target : id of target html element
+  load : (url, target,view) => mylib.ajax(
+
+   
+    url, txt => document.getElementById(target).innerHTML = txt,data(target,view)
+   
+   
+  )
+  
+};
+
+function data(target,view){
+
+  const box = document.getElementById(target);
+
+  // 👇️ removes element from DOMa
+
+
+  if(view === "true"){
+   
+    box.style.display = 'block';
+    }
+    else if(view === "false"){
+      box.style.display = 'none';
+    }
+
+
+}
+
+
+$(document).on("click", "ul li", function () {
+  i = $(this).attr("data-id");
+  alert(i)
+})
